@@ -39,7 +39,7 @@ install() {
   echo "installing HDFS cli...."
   python -c "import hdfs" &> /dev/null
   if [ $? != 0 ] ; then
-    sudo pip install hdfs &> /dev/null
+    sudo pip2 install hdfs &> /dev/null
   fi
   rm ${HDFS_CLI_CONFIG} &> /dev/null
   echo "[global]" >> ${HDFS_CLI_CONFIG}
