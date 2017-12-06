@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+## [0.1.2] 2017-11-24
 ### Fixed
 - PNDA-3499: Cleanup CHANGELOG with missing release info.
 
