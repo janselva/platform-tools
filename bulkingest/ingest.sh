@@ -27,7 +27,7 @@ Help() {
   echo ""
   echo "Examples:"
   echo ""
-  echo "  ingest.sh install http://cdh.mgr1:14000"
+  echo "  ingest.sh install https://knox.service.dc1.pnda.local:8443/gateway/pnda /root/pndaproject/pnda-cli/platform-certificates/pndaproject-ca.crt"
   echo "  ingest.sh upload --force --threads 10 text.txt"
   echo "  ingest.sh upload -f -t 2 data_dir"
   echo ""
@@ -44,12 +44,20 @@ install() {
   rm ${HDFS_CLI_CONFIG} &> /dev/null
   echo "[global]" >> ${HDFS_CLI_CONFIG}
   echo "default.alias=prod" >> ${HDFS_CLI_CONFIG}
+  echo "autoload.paths=./hdfscli.py" >> ${HDFS_CLI_CONFIG}
   echo "[prod.alias]" >> ${HDFS_CLI_CONFIG}
+  echo "client=SecureClient" >> ${HDFS_CLI_CONFIG}
   echo "url=$2" >> ${HDFS_CLI_CONFIG}
-  echo "user=hdfs" >> ${HDFS_CLI_CONFIG}
+  echo "verify=$3" >> ${HDFS_CLI_CONFIG}
 }
 
 upload() {
+  read -p 'Enter Knox username: ' user
+  read -sp 'Enter Knox password: ' passwd
+  username_encoded=$(echo -n "$user" | base64)
+  password_encoded=$(echo -n "$passwd" | base64)
+  echo "user"=$username_encoded >> ${HDFS_CLI_CONFIG}
+  echo "password"=$password_encoded >> ${HDFS_CLI_CONFIG}
   echo ""
   for last; do true; done
   echo "Trying to upload $last onto cluster"
@@ -65,6 +73,8 @@ upload() {
     echo ""
     echo "Upload of $last done."
   fi
+  # Remove username & password from config file(Last two lines)
+  sed -i -e :a -e '$d;N;2,2ba' -e 'P;D' ${HDFS_CLI_CONFIG}
 }
 
 # Check for help option or no option and print help and exit
