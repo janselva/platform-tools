@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.0.0] 2018-08-28
+
 ### Changed
 - PNDA-4851: Added secure client code to allow bulk ingest via Knox
 
